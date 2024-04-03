@@ -1,5 +1,5 @@
 const int lightSensor = A0;
-const int ledPin = 13;
+const int ledPin = 12;
 
 int sensorVal;        //Photoresistor
 int ledBrightness;
