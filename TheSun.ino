@@ -17,6 +17,6 @@ void loop() {
   sensorVal = analogRead(lightSensor);
 
   if (sensorVal >= 300) {
-      ledPin = HIGH;
+      ledPin = HIGH; //Tester
     }
   }
