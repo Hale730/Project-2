@@ -1,22 +1,29 @@
+#include <Servo.h>
+
+Servo myservo; // servo variable
+const int buttonPin = 9; // copper wire is Pin 9
 const int lightSensor = A0;
-const int ledPin = 12;
-
-int sensorVal;        //Photoresistor
-int ledBrightness;
-
-// When lights are on, sensorVal ~ 630+
-// When lights are off, sensorVal ~ 200-
-// So, ranges should be LEDs on < sensorVal=300 < LEDs off
+int sensorVal; //photoresistor
+int buttonVal;
 
 void setup() {
-  pinMode(ledPin, OUTPUT);
+  myservo.attach(2); // servo is Pin 2
+  pinMode(buttonPin, INPUT); 
   Serial.begin(9600);
 }
 
 void loop() {
+  buttonVal = digitalRead(buttonPin);
   sensorVal = analogRead(lightSensor);
 
-  if (sensorVal >= 300) {
-      ledPin = HIGH; //Tester
-    }
+  if (buttonVal == LOW) {
+    myservo.write(0); // nothing happens
   }
+  else {
+    myservo.write (90); // servo turns/Icarus flies
+  }
+
+  if (sensorVal >= 650); {
+    myservo.write (180);
+  }
+}
