@@ -7,6 +7,8 @@ int sensorVal; //photoresistor
 int buttonVal = 0;
 int lastButtonVal = 0;
 
+bool flight = false;
+
 void setup() {
   myservo.attach(2); // servo is Pin 2
   pinMode(buttonPin, INPUT); 
@@ -24,12 +26,14 @@ void loop() {
       myservo.write(180); // nothing happens
     } else {
       myservo.write (90); // servo turns/Icarus flies
-    }
-    // Delay a little bit to avoid bouncing
-    delay(50);
-  }
+      flight = true;
 
-  // if (sensorVal >= 650); {
-  //    myservo.write (180);
-  // }
+    }
+  }
+  if (flight == true && sensorVal >= 750) {
+      myservo.write (0);
+    }
+   
+
+   Serial.println(sensorVal);
 }
