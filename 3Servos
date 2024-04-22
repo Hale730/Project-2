@@ -8,8 +8,10 @@ const int lightSensor = A2;
 int sensorVal; //photoresistor
 int buttonVal = 0;
 int lastButtonVal = 0;
+int i;
 
 bool flight = false;
+bool flyOn = true;
 
 void setup() {
   flightservo.attach(2); // servo is Pin 2
@@ -17,29 +19,44 @@ void setup() {
   waveservo.attach(6);
   pinMode(buttonPin, INPUT); 
   Serial.begin(9600);
-  flightservo.write(180);
+  flightservo.write(0);
   splashservo.write(180);
-  waveservo.write(0);
 }
 
 void loop() {
   buttonVal = digitalRead(buttonPin);
   sensorVal = analogRead(lightSensor);
 
+  waveservo.write(0);
+  waveservo.write(90);
+
   if (buttonVal != lastButtonVal) {
     // if the state has changed, increment the counter
     if (buttonVal == LOW) {
       flightservo.write(180); // nothing happens
     } else {
-      flightservo.write (90); // servo turns/Icarus flies
-      flight = true;
+      if(buttonVal == HIGH && flyOn) {      
+       for(int i = 0; i < 90; i++) {       
+       flightservo.write(i); // servo turns/Icarus flies
+       delay(20);
+       flight = true;
+         }
+         flyOn = false;
+       }
     }
   }
-  if (flight == true && sensorVal >= 750) {
-      flightservo.write(0);
+  if (flight == true && sensorVal >= 450) {
+      flightservo.write(180);
       delay(500);
       splashservo.write(90);
     }
-   
-   Serial.println(sensorVal);
 }
+// //create flyOn boolean to true 
+// if(buttonVal == LOW && flyOn)
+//   for(int i = 0; i < 90; i++){
+//     myServo.write(i);
+//   }
+//   flyOn  = false; 
+
+//    Serial.println(sensorVal);
+// }
