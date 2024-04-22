@@ -18,7 +18,7 @@ void setup() {
   pinMode(buttonPin, INPUT); 
   Serial.begin(9600);
   flightservo.write(180);
-  splashservo.write(0);
+  splashservo.write(180);
   waveservo.write(0);
 }
 
@@ -35,12 +35,11 @@ void loop() {
       flight = true;
     }
   }
-  if (flight == true && sensorVal >= 550) {
+  if (flight == true && sensorVal >= 750) {
       flightservo.write(0);
-      delay(100);
+      delay(500);
       splashservo.write(90);
     }
    
-
    Serial.println(sensorVal);
 }
