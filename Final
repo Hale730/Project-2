@@ -1,0 +1,54 @@
+#include <Servo.h>
+
+Servo flightservo;
+Servo splashservo;
+Servo waveservo; 
+const int buttonPin = 9; // copper wire is Pin 9
+const int lightSensor = A2;
+int sensorVal; //photoresistor
+int buttonVal = 0;
+int lastButtonVal = 0;
+int i;
+
+bool flight = false;
+bool flyOn = true;
+
+void setup() {
+  flightservo.attach(2); // servo is Pin 2
+  splashservo.attach(6);
+  waveservo.attach(4);
+  pinMode(buttonPin, INPUT); 
+  Serial.begin(9600);
+  flightservo.write(0);
+  splashservo.write(0);
+}
+
+void loop() {
+  buttonVal = digitalRead(buttonPin);
+  sensorVal = analogRead(lightSensor);
+
+  waveservo.write(0);
+  waveservo.write(90);
+
+  if (buttonVal != lastButtonVal) {
+    // if the state has changed, increment the counter
+    if (buttonVal == LOW) {
+      flightservo.write(180); // nothing happens
+    } else {
+      if(buttonVal == HIGH && flyOn) {      
+       for(int i = 0; i < 90; i++) {       
+       flightservo.write(i); // servo turns/Icarus flies
+       delay(20);
+       flight = true;
+         }
+         flyOn = false;
+       }
+    }
+  }
+  if (flight == true && sensorVal >= 250) {
+      delay(500);
+      flightservo.write(180);
+      delay(500);
+      splashservo.write(90);
+    }
+}
