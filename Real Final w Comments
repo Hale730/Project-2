@@ -1,22 +1,31 @@
+/*
+Icarus
+
+Team name: Jackbox
+Team members: Alex Rosemann and Hayden Porter
+Description: In this program we use use copper tape and a photoresistor as inputs and servos as outputs to recount the story of Icarus
+
+*/
+
 #include <Servo.h>
 
 Servo flightservo;
 Servo splashservo;
 Servo waveservo; 
-const int buttonPin = 9; // copper wire is Pin 9
-const int lightSensor = A2;
-int sensorVal; //photoresistor
+const int buttonPin = 9; // maze copper tape is Pin 9
+const int lightSensor = A2; // the sun photoresistor is Pin A2
+int sensorVal; 
 int buttonVal = 0;
 int lastButtonVal = 0;
 int i;
 
-bool flight = false;
+bool flight = false; //flight states
 bool flyOn = true;
 
 void setup() {
-  flightservo.attach(2); // servo is Pin 2
-  splashservo.attach(4);
-  waveservo.attach(6);
+  flightservo.attach(2); // Icarus servo is Pin 2
+  splashservo.attach(4); // Splash servo is Pin 4
+  waveservo.attach(6); // Wave servo is Pin 6
   pinMode(buttonPin, INPUT); 
   Serial.begin(9600);
   flightservo.write(0);
@@ -27,9 +36,10 @@ void loop() {
   buttonVal = digitalRead(buttonPin);
   sensorVal = analogRead(lightSensor);
 
-  waveservo.write(0);
+  waveservo.write(0); // Wave rocking back and forth
   waveservo.write(90);
 
+// When Daedalus reached the end of the maze (copper tape) move Icarus into the sky/towards the sun
   if (buttonVal != lastButtonVal) {
     // if the state has changed, increment the counter
     if (buttonVal == LOW) {
@@ -45,18 +55,12 @@ void loop() {
        }
     }
   }
+
+// Once Icarus is in the air, if the sun is revealed, he falls into the sea
   if (flight == true && sensorVal >= 450) {
       flightservo.write(180);
+// When Icarus falls in the sea, he creates a splash
       delay(500);
       splashservo.write(90);
     }
 }
-// //create flyOn boolean to true 
-// if(buttonVal == LOW && flyOn)
-//   for(int i = 0; i < 90; i++){
-//     myServo.write(i);
-//   }
-//   flyOn  = false; 
-
-//    Serial.println(sensorVal);
-// }
